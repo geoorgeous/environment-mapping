@@ -64,11 +64,12 @@ MeshNode::MeshNode(aiMesh *mesh)
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (void*)(6 * sizeof(GLfloat)));
 
-	if (mesh->HasFaces()) 
+	if (mesh->HasFaces())
 	{
 		unsigned int *indices = new unsigned int[mesh->mNumFaces * 3];
-		for (int i = 0; i < mesh->mNumFaces; ++i) {
-			indices[i * 3] = mesh->mFaces[i].mIndices[0];
+		for (int i = 0; i < mesh->mNumFaces; ++i) 
+		{
+			indices[i * 3 + 0] = mesh->mFaces[i].mIndices[0];
 			indices[i * 3 + 1] = mesh->mFaces[i].mIndices[1];
 			indices[i * 3 + 2] = mesh->mFaces[i].mIndices[2];
 		}
@@ -109,8 +110,9 @@ Mesh::Mesh(const char* filepath)
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(filepath, NULL);
 
-	for (int i = 0; i < scene->mNumMeshes; ++i) 
-		m_nodes.push_back(new MeshNode(scene->mMeshes[i]));
+	if (scene)
+		for (int i = 0; i < scene->mNumMeshes; ++i) 
+			m_nodes.push_back(new MeshNode(scene->mMeshes[i]));
 }
 
 Mesh::~Mesh()
